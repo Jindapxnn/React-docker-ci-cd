@@ -1,0 +1,18 @@
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    typs:
+      - completed
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+    - name: Pull Docker image
+      run: sudo docker pull ppxnttt/react-pipeline:latest
+    - name: Delete old Docker Container
+      run: sudo docker rm -f react-pipeline-container || true
+    - name: Run docker Container
+      run: sudo docker run -d -p 5173:5173 --name react-pipeline-container ppxnttt/react-pipeline:latest 
